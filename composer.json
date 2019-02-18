@@ -1,0 +1,12 @@
+{
+    "name": "genealabs/wordpress-cdn-rewriter",
+    "description": "Rewrites any URLs that cantiain \"/upload/\" to point to the CDN",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mike Bronner",
+            "email": "mike@genealabs.com"
+        }
+    ]
+}
