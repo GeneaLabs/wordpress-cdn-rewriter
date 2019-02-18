@@ -17,7 +17,11 @@ add_filter('final_output', function ($html) {
 
 function replaceDomains(string $html) : string
 {
-    global $genealabsCdnRewriterOptions;
+    $genealabsCdnRewriterOptions = get_option('genealabs_cdn_rewriter_settings');
+
+    if (!$genealabsCdnRewriterOptions) {
+        return $html;
+    }
 
     $domain = rtrim($genealabsCdnRewriterOptions["cdn_edge_url"], '/') . '/';
 
@@ -27,8 +31,6 @@ function replaceDomains(string $html) : string
 /********************
  * Admin Menu Items
  * *****************/
-$genealabsCdnRewriterOptions = get_option('genealabs_cdn_rewriter_settings');
-
 add_action('admin_menu', function () {
     add_options_page('CDN URL Rewriter', 'CDN URL Rewriter', 'manage_options', 'genealabs_cdn_rewriter_options', 'genealabsCdnRewriterOptionsPage');
 });
@@ -39,27 +41,33 @@ add_action('admin_init', function () {
 
 function genealabsCdnRewriterOptionsPage()
 {
-    global $genealabsCdnRewriterOptions;
+    $genealabsCdnRewriterOptions = get_option('genealabs_cdn_rewriter_settings');
 
     ob_start();
 ?>
-	<div class="wrap">
-		<h2>CDN URL Rewriter</h2>
-		<form method="post" action="options.php">
- 			<?php settings_fields('genealabs_cdn_rewriter_settings_group'); ?>
-			
-			<h4><?php _e('Enter edge URL of your CDN for this site:', 'genealabs_cdn_rewriter_domain'); ?></h4>
+    <div class="wrap">
+    	<h1>CDN URL Rewriter</h1>
+    	<form method="post" action="options.php">
+            <?php settings_fields('genealabs_cdn_rewriter_settings_group'); ?>
             <p>
                 <label class="description" for="genealabs_cdn_rewriter_settings[cdn_edge_url]">
-                    <?php _e('Enter URL of the "uploads" folder in your CDN for this site', 'genealabs_cdn_rewriter_domain'); ?>
-                </label> 
-                <input id="genealabs_cdn_rewriter_settings[cdn_edge_url]" type="text" name="genealabs_cdn_rewriter_settings[cdn_edge_url]" value="<?php echo $dcr_options['cdn_link']; ?>" /><small>e.g : http://cdn.designzzz.com/</small>
-				<p>
-                    <strong>Example:</strong> https://yourbucket.region.cdn.digitaloceanspaces.com/yoursite/uploads
-                </p>
-			<p>
+                    <?php _e('Enter URL of the "uploads" folder in your CDN for this site', 'genealabs_cdn_rewriter'); ?>
+                </label>
+            </p>
+            <p>
+                <input
+                    id="genealabs_cdn_rewriter_settings[cdn_edge_url]"
+                    type="text"
+                    name="genealabs_cdn_rewriter_settings[cdn_edge_url]"
+                    value="<?php echo $genealabsCdnRewriterOptions['cdn_edge_url']; ?>"
+                    style="width: 500px;"
+                >
+            </p>
+            <p>
+                <strong>Example:</strong> https://yourbucket.region.cdn.digitaloceanspaces.com/yoursite/uploads
+            </p>
 			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save Options', 'dcr_domain'); ?>" />
+				<input type="submit" class="button-primary" value="<?php _e('Save Options', 'genealabs_cdn_rewriter'); ?>" />
 			</p>
             <p>Clear the above field(s) or disable the plugin to restore original functionality.</p>
 		</form>
